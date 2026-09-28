@@ -2,9 +2,8 @@
 Mission Log & Reporting Module
 ================================
 Functional Module 3.
-Records every calculation the user runs, persists it to a JSON file so
-history survives between sessions, and prints a summary analytics report
-(count by calculation type, most recent runs).
+It records every calculation that user runs, keeps it to a JSON file so
+history is saved between sessions, it also prints a summary of analytics report
 Input:  calculation name + the inputs/outputs dict for that run
 Output: mission_history.json on disk, and a printed report on request
 """
@@ -28,20 +27,15 @@ class MissionLog:
         with open(self.history_file, "w") as f:
             json.dump(self.entries, f, indent=2)
     def record(self, calculation: str, inputs: dict, outputs: dict) -> None:
-        """Add one calculation result to the log and persist it to disk."""
         entry = {
             "timestamp": datetime.now().isoformat(timespec="seconds"),
             "calculation": calculation,
             "inputs": inputs,
-            "outputs": outputs,
-        }
+            "outputs": outputs,}
         self.entries.append(entry)
         self._save()
     def print_report(self) -> None:
-        """Print a simple analytics summary of everything calculated so far."""
-        print("\n" + "=" * 45)
-        print("          MISSION REPORT")
-        print("=" * 45)
+        print("\n" + "=" * 45 + "MISSION REPORT" + "=" * 45)
         if not self.entries:
             print("No calculations have been run yet.")
             return
@@ -56,5 +50,4 @@ class MissionLog:
         for entry in self.entries[-5:]:
             print(
                 f"  [{entry['timestamp']}] {entry['calculation']} "
-                f"-> inputs={entry['inputs']}, outputs={entry['outputs']}"
-            )
+                f"-> inputs={entry['inputs']}, outputs={entry['outputs']}")

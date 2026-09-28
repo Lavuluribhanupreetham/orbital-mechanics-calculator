@@ -7,15 +7,12 @@ from orbital_calculations import orbital_velocity, escape_velocity, orbital_peri
 from hohmann_transfer import hohmann_transfer
 class TestOrbitalCalculations(unittest.TestCase):
     def test_orbital_velocity_leo(self):
-        # ISS-like altitude (~400 km) should give ~7.66 km/s
         v = orbital_velocity(400)
         self.assertAlmostEqual(v, 7.66, places=1)
     def test_escape_velocity_ground(self):
-        # Escape velocity at the surface should be ~11.2 km/s
         v = escape_velocity(0)
         self.assertAlmostEqual(v, 11.19, places=1)
     def test_orbital_period_leo(self):
-        # A ~400 km orbit takes roughly 90-95 minutes
         period = orbital_period(400)
         self.assertTrue(90 <= period <= 95)
     def test_negative_altitude_raises(self):
@@ -24,8 +21,8 @@ class TestOrbitalCalculations(unittest.TestCase):
 class TestHohmannTransfer(unittest.TestCase):
     def test_leo_to_geo(self):
         result = hohmann_transfer(400, 35786)
-        self.assertGreater(result.total_delta_v, 0)
-        self.assertGreater(result.transfer_time_sec, 0)
+        self.assertGreater(result.total_delta_velocity, 0)
+        self.assertGreater(result.transfer_time_in_sec, 0)
     def test_equal_altitudes_raises(self):
         with self.assertRaises(ValueError):
             hohmann_transfer(500, 500)

@@ -1,7 +1,7 @@
 """
 Orbital Mechanics Calculator - CLI entry point.
 Ties together the three functional modules:
-    1. orbital_calculations  - velocity, escape velocity, period
+    1. orbital_calculations  - velocity, escape velocity, orbital period
     2. hohmann_transfer      - two-orbit transfer planning
     3. mission_log           - history persistence + reporting
 Run with:  python main.py
@@ -28,7 +28,6 @@ Choose an option:
 6. Exit
 """
 def read_altitude(prompt: str) -> float:
-    """Read and validate a single altitude value from the user."""
     value = float(input(prompt))
     if value < 0:
         raise ValueError("Altitude cannot be negative.")
@@ -58,18 +57,17 @@ def handle_hohmann(log: MissionLog) -> None:
     print(f"Final orbit velocity:    {result.velocity_final:.2f} km/s")
     print(f"Transfer velocity 1:     {result.velocity_transfer_1:.2f} km/s")
     print(f"Transfer velocity 2:     {result.velocity_transfer_2:.2f} km/s")
-    print(f"\nFirst burn (dv1):        {result.delta_v_1:.2f} km/s")
-    print(f"Second burn (dv2):       {result.delta_v_2:.2f} km/s")
-    print(f"Total delta-v:           {result.total_delta_v:.2f} km/s")
+    print(f"\nFirst burn (dv1):        {result.delta_velocity_1:.2f} km/s")
+    print(f"Second burn (dv2):       {result.delta_velocity_2:.2f} km/s")
+    print(f"Total delta-v:           {result.total_delta_velocity:.2f} km/s")
     print(
-        f"\nTransfer time:           {result.transfer_time_sec / 60:.2f} minutes "
-        f"({result.transfer_time_sec / 3600:.2f} hours)")
+        f"\nTransfer time:           {result.transfer_time_in_sec / 60:.2f} minutes "
+        f"({result.transfer_time_in_sec / 3600:.2f} hours)")
     log.record(
         "Hohmann Transfer",
         {"initial_altitude_km": initial_altitude, "final_altitude_km": final_altitude},
-        {"total_delta_v_km_s": round(result.total_delta_v, 2),
-         "transfer_time_hr": round(result.transfer_time_sec / 3600, 2)},
-    )
+        {"total_delta_velocity_km_s": round(result.total_delta_velocity, 2),
+         "transfer_time_hr": round(result.transfer_time_in_sec / 3600, 2)})
 def main() -> None:
     log = MissionLog()
     logger.info("Session started.")
